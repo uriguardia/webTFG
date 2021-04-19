@@ -13,6 +13,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Welcome</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     <style type="text/css">
@@ -24,9 +25,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to our site.</h1>
     </div>
     <p>
-        <a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
-        <a href="upload.php" class="btn btn-danger">Upload Documents</a>
-        <a href="visualize.php" class="btn btn-danger">Visualize Your Contents</a>
+        <a href="logout.php" class="btn btn-default">Sign Out of Your Account</a>
+        <a href="upload-2.php" class="btn btn-danger">Upload Documents</a>
+        <a href="view.php" class="btn btn-danger">Visualize Your Contents</a>
     </p>
 </body>
 </html>
