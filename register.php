@@ -78,7 +78,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Redirect to login page
-                header("location: login.php");
+                header("location: index.php");
             } else{
                 echo "Something went wrong. Please try again later.";
             }
@@ -101,35 +101,41 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     <style type="text/css">
-        body{ font: 14px sans-serif; }
-        .wrapper{ width: 350px; padding: 20px; }
+        @import "bourbon";
+        body{font: 14px sans-serif; background: #fee !important; min-height: 100vh;}
+        .wrapper {margin-top: 80px;margin-bottom: 80px;}
+        .form-signin {max-width: 380px;padding: 15px 35px 45px;margin: 0 auto;background-color: #fff;border: 1px solid rgba(1,0,0,0);}
+        .form-signin-heading,
+        .checkbox {margin-bottom: 30px;}
+        .checkbox {font-weight: normal;}
+        .form-control {position: relative;font-size: 16px;height: auto;padding: 10px;@include box-sizing(border-box);&:focus {z-index: 2;}}
+        input[type="text"] {margin-bottom: -1px;border-bottom-left-radius: 0;border-bottom-right-radius: 0;}
+        input[type="password"] {margin-bottom: 20px;border-top-left-radius: 0;border-top-right-radius: 0;}
     </style>
+    <link rel="icon" href="unnamed.ico">
 </head>
 <body>
     <div class="wrapper">
-        <h2>Sign Up</h2>
-        <p>Please fill this form to create an account.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <h2 class="form-signin-heading">Sign Up</h2>
+            <p>Please fill this form to create an account.</p>
             <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
+                <input type="text" name="username" class="form-control" placeholder="Username" autofocus="" value="<?php echo $username; ?>">
                 <span class="help-block"><?php echo $username_err; ?></span>
             </div>    
             <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
+                <input type="password" name="password" class="form-control" placeholder="Password" autofocus="" value="<?php echo $password; ?>">
                 <span class="help-block"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
-                <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" autofocus="" value="<?php echo $confirm_password; ?>">
                 <span class="help-block"><?php echo $confirm_password_err; ?></span>
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-danger" value="Submit">
                 <input type="reset" class="btn btn-default" value="Reset">
             </div>
-            <p>Already have an account? <a href="login.php">Login here</a>.</p>
+            <p>Already have an account? <a href="index.php">Login here</a>.</p>
         </form>
     </div>    
 </body>

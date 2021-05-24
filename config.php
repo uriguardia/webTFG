@@ -24,10 +24,11 @@ CREATE TABLE tbl_classes (
 	created_by int(11) NOT NULL
 );
 
-CREATE TABLE tbl_uploads (
+CREATE TABLE tbl_upload (
   	id int(11) NOT NULL AUTO_INCREMENT,
   	file_name varchar(128) NOT NULL,
   	group_name varchar(128) NOT NULL,
+  	group_id int(11) NOT NULL,
   	default_name varchar(128) NOT NULL,
   	description varchar(256) NOT NULL,
   	phase_name varchar(128) NOT NULL,
@@ -45,5 +46,5 @@ CREATE TABLE tbl_users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 );
 */
-?>
+
 

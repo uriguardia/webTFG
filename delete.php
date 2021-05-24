@@ -1,12 +1,26 @@
 <?php
-//delete.php
 require_once 'config.php';
-include 'upload-2.php';
 
-$id = $_GET['id']; //this needs to be sanitized
+// We fetch the class id
+$groupid = $_GET['id'];
 
-$del = "DELETE FROM tbl_classes WHERE id='$id'";
-$result = mysqli_query($link, $del);
+// Prepare the query and execute
+$sql = "SELECT * FROM tbl_upload WHERE group_id='$groupid'";
+$result = mysqli_query($link, $sql);
+while($row = mysqli_fetch_array($result)){
+	// Unlink the file from the /upload file
+	$filename = $row['file_name'];
+	$path = "uploads/$filename";
+	unlink($path);
+}
 
-header("Location: upload-2.php");
+// We prepare the multiple queries
+$del = "DELETE FROM tbl_classes WHERE id='$groupid';";
+
+$del .= "DELETE FROM tbl_upload WHERE group_id='$groupid'";
+
+// We execute the queries
+$result = mysqli_multi_query($link, $del);
+
+header("Location: upload.php");
 ?>

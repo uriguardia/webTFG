@@ -1,63 +1,59 @@
 <?php
 require_once 'config.php';
 
-// Initialize the session and get user id
-session_start();
-$userid = $_SESSION["id"]; 
-
 // Define variables and initialize with empty values
 $groupname_err = "";
 
+// GET to obtain the id of the group from upload.php
+if(empty($_GET['id'])){
+    $groupid = $_POST['userid'];
+}
+else{
+    $groupid = $_GET['id'];
+}
+
+// Fetch rows from classes database
+$stmt = "SELECT * FROM tbl_classes WHERE id ='$groupid'";
+$check = mysqli_query($link, $stmt);
+$row = mysqli_fetch_array($check);
+
 // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    
+if($_SERVER["REQUEST_METHOD"] == "POST"){   
     // Check if name is empty
     if(empty($_POST['name'])){
         $groupname_err = "Please enter a name";
     } else{
         $groupname = $_POST["name"];
-    }
+    }   
     
-    // Store description in a variable
-    $description = $_POST['description'];
+     // Store values in their corresponding variables
+     $desc = $_POST['description'];
     
-    // Validate name credential
+    // Validate that the name field is not empty
     if(empty($groupname_err)){
         
-         // Prepare an insert statement
-         $sql = "INSERT INTO tbl_classes(group_name,description,created_by) VALUES (?, ?, ?)";
-         if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ssi", $param_groupname, $param_description, $param_userid);
+         // Prepare the queries
+         $sql = "UPDATE tbl_classes SET group_name='$groupname', description='$desc' WHERE id='$groupid';";
+         $sql .= "UPDATE tbl_upload SET group_name='$groupname' WHERE group_id='$groupid'";
             
-            // Set parameters
-            $param_groupname = $groupname;
-            $param_description = $description;
-            $param_userid = $userid;
-             
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // Redirect to login page
-                ?>
-                <script>
-                    alert('Class successfully registered.');
-                    window.location.href='upload.php?success';
-                </script>
-                <?php
-            } else{
-                ?>
-                <script>
-                    alert('Something went wrong. Please try again later.');
-                    window.location.href='upload.php?fail';
-                </script>
-                <?php
-            }
-
-            // Close statement
-            mysqli_stmt_close($stmt);
+         // Attempt to execute the prepared statement
+         if(mysqli_multi_query($link, $sql)){
+            ?>
+            <script>
+                alert('Successfully edited');
+                window.location.href='upload.php?success';
+            </script>
+            <?php
+                
+         } else{
+            ?>
+            <script>
+                alert('Something went wrong. Please try again later');
+                window.location.href='upload.php?fail';
+            </script>
+            <?php
         }
     }
-    // Close connection
     mysqli_close($link);
 }
 ?>
@@ -66,7 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register New Class</title>
+    <title>Edit Your Class</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     <style type="text/css">
         @import "bourbon";
@@ -85,16 +81,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <body>
     <div class="wrapper">
         <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" name="Form" method="post" enctype="multipart/form-data">
-            <h2 class="form-signin-heading">Register New Class</h2>
+            <h2 class="form-signin-heading">Edit Your Class</h2>
             <div class="form-group <?php echo (!empty($groupname_err)) ? 'has-error' : ''; ?>">
-                <input type="text" class="form-control" name="name" id="a" placeholder="Name" autofocus="">
+                <input type="hidden" name="userid" class="txtField" value="<?php echo $row['id']; ?>">
+                <input type="text" class="form-control" name="name" id="a" placeholder="Name" autofocus="" value="<?php echo $row['group_name']; ?>">
                 <span class="help-block"><?php echo $groupname_err; ?></span>
             </div>
             <div class="form-group">
-                <textarea name="description" id="description" class="form-control" placeholder="Description" autofocus=""></textarea>
+                <textarea name="description" id="description" class="form-control" placeholder="Description" autofocus=""><?php echo $row['description']; ?></textarea>
             </div>
             <div class="form-group">
-                <input type="submit" value="Register Class" class="btn btn-danger" name="btn-class">
+                <input type="submit" value="Update" class="btn btn-danger" name="btn-class">
                 <a href="upload.php" class="btn btn-default">Cancel</a>
             </div>
         </form>
